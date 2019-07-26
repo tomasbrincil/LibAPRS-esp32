@@ -1,6 +1,6 @@
 // Based on work by Francesco Sacchi
 
-#include "Arduino.h"
+#include "FakeArduino.h"
 #include <string.h>
 #include <ctype.h>
 #include "AX25.h"
@@ -67,7 +67,7 @@ void ax25_poll(AX25Ctx *ctx) {
             if (ctx->frame_len >= AX25_MIN_FRAME_LEN) {
                 if (ctx->crc_in == AX25_CRC_CORRECT) {
                     if(LibAPRS_open_squelch) {
-                        LED_RX_ON();
+                        // LED_RX_ON();
                     }
                     ax25_decode(ctx);
                 }

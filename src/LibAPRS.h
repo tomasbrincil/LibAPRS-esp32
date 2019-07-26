@@ -1,4 +1,4 @@
-#include "Arduino.h"
+// #include "FakeArduino.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -7,6 +7,12 @@
 #include "HDLC.h"
 #include "AFSK.h"
 #include "AX25.h"
+
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void APRS_init(int reference, bool open_squelch);
 void APRS_poll(void);
@@ -37,3 +43,8 @@ void APRS_msgRetry();
 void APRS_printSettings();
 
 int freeMemory();
+
+
+#ifdef __cplusplus
+}
+#endif

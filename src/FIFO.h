@@ -2,7 +2,7 @@
 #define UTIL_FIFO_H
 
 #include <stddef.h>
-#include <util/atomic.h>
+// #include <util/atomic.h>
 
 typedef struct FIFOBuffer
 {
@@ -45,7 +45,7 @@ inline void fifo_flush(FIFOBuffer *f) {
 
 inline bool fifo_isempty_locked(const FIFOBuffer *f) {
   bool result;
-  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+  /*ATOMIC_BLOCK(ATOMIC_RESTORESTATE)*/ {
     result = fifo_isempty(f);
   }
   return result;
@@ -53,21 +53,21 @@ inline bool fifo_isempty_locked(const FIFOBuffer *f) {
 
 inline bool fifo_isfull_locked(const FIFOBuffer *f) {
   bool result;
-  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+  /*ATOMIC_BLOCK(ATOMIC_RESTORESTATE)*/ {
     result = fifo_isfull(f);
   }
   return result;
 }
 
 inline void fifo_push_locked(FIFOBuffer *f, unsigned char c) {
-  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+  /*ATOMIC_BLOCK(ATOMIC_RESTORESTATE)*/ {
     fifo_push(f, c);
   }
 }
 
 inline unsigned char fifo_pop_locked(FIFOBuffer *f) {
   unsigned char c;
-  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+  /*ATOMIC_BLOCK(ATOMIC_RESTORESTATE)*/ {
     c = fifo_pop(f);
   }
   return c;

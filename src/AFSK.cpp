@@ -1,6 +1,6 @@
 #include <string.h>
 #include "AFSK.h"
-#include "Arduino.h"
+#include "FakeArduino.h"
 
 extern unsigned long custom_preamble;
 extern unsigned long custom_tail;
@@ -28,33 +28,33 @@ void AFSK_hw_refDetect(void) {
 void AFSK_hw_init(void) {
     // Set up ADC
 
-    AFSK_hw_refDetect();
+    // AFSK_hw_refDetect();
 
-    TCCR1A = 0;                                    
-    TCCR1B = _BV(CS10) | _BV(WGM13) | _BV(WGM12);
-    ICR1 = (((CPU_FREQ+FREQUENCY_CORRECTION)) / 9600) - 1;
+    // TCCR1A = 0;                                    
+    // TCCR1B = _BV(CS10) | _BV(WGM13) | _BV(WGM12);
+    // ICR1 = (((CPU_FREQ+FREQUENCY_CORRECTION)) / 9600) - 1;
 
-    if (hw_5v_ref) {
-        ADMUX = _BV(REFS0) | 0;
-    } else {
-        ADMUX = 0;
-    }
+    // if (hw_5v_ref) {
+    //     ADMUX = _BV(REFS0) | 0;
+    // } else {
+    //     ADMUX = 0;
+    // }
 
-    ADC_DDR  &= ~_BV(0);
-    ADC_PORT &= ~_BV(0);
-    DIDR0 |= _BV(0);
-    ADCSRB =    _BV(ADTS2) |
-                _BV(ADTS1) |
-                _BV(ADTS0);  
-    ADCSRA =    _BV(ADEN) |
-                _BV(ADSC) |
-                _BV(ADATE)|
-                _BV(ADIE) |
-                _BV(ADPS2);
+    // ADC_DDR  &= ~_BV(0);
+    // ADC_PORT &= ~_BV(0);
+    // DIDR0 |= _BV(0);
+    // ADCSRB =    _BV(ADTS2) |
+    //             _BV(ADTS1) |
+    //             _BV(ADTS0);  
+    // ADCSRA =    _BV(ADEN) |
+    //             _BV(ADSC) |
+    //             _BV(ADATE)|
+    //             _BV(ADIE) |
+    //             _BV(ADPS2);
 
-    AFSK_DAC_INIT();
-    LED_TX_INIT();
-    LED_RX_INIT();
+    // AFSK_DAC_INIT();
+    // LED_TX_INIT();
+    // LED_RX_INIT();
 }
 
 void AFSK_init(Afsk *afsk) {
@@ -87,7 +87,7 @@ static void AFSK_txStart(Afsk *afsk) {
         afsk->preambleLength = DIV_ROUND(custom_preamble * BITRATE, 8000);
         AFSK_DAC_IRQ_START();
     }
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+    /*ATOMIC_BLOCK(ATOMIC_RESTORESTATE)*/ {
       afsk->tailLength = DIV_ROUND(custom_tail * BITRATE, 8000);
     }
 }
@@ -456,20 +456,21 @@ void AFSK_adc_isr(Afsk *afsk, int8_t currentSample) {
 
 }
 
-extern void APRS_poll();
-uint8_t poll_timer = 0;
-ISR(ADC_vect) {
-    TIFR1 = _BV(ICF1);
-    AFSK_adc_isr(AFSK_modem, ((int16_t)((ADC) >> 2) - 128));
-    if (hw_afsk_dac_isr) {
-        DAC_PORT = (AFSK_dac_isr(AFSK_modem) & 0xF0) | _BV(3); 
-    } else {
-        DAC_PORT = 128;
-    }
 
-    poll_timer++;
-    if (poll_timer > 3) {
-        poll_timer = 0;
-        APRS_poll();
-    }
-}
+// extern void APRS_poll();
+// uint8_t poll_timer = 0;
+// ISR(ADC_vect) {
+//     TIFR1 = _BV(ICF1);
+//     AFSK_adc_isr(AFSK_modem, ((int16_t)((ADC) >> 2) - 128));
+//     if (hw_afsk_dac_isr) {
+//         DAC_PORT = (AFSK_dac_isr(AFSK_modem) & 0xF0) | _BV(3); 
+//     } else {
+//         DAC_PORT = 128;
+//     }
+
+//     poll_timer++;
+//     if (poll_timer > 3) {
+//         poll_timer = 0;
+//         APRS_poll();
+//     }
+// }

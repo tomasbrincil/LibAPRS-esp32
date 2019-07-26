@@ -1,10 +1,11 @@
-#include "Arduino.h"
+#include "FakeArduino.h"
 #include "AFSK.h"
 #include "AX25.h"
+#include "LibAPRS.h"
 
 Afsk modem;
 AX25Ctx AX25;
-extern void aprs_msg_callback(struct AX25Msg *msg);
+extern "C" void aprs_msg_callback(struct AX25Msg *msg);
 #define countof(a) sizeof(a)/sizeof(a[0])
 
 int LibAPRS_vref = REF_3V3;

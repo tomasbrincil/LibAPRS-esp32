@@ -5,12 +5,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <avr/pgmspace.h>
+// #include <avr/pgmspace.h>
 #include "FIFO.h"
 #include "HDLC.h"
 
 #define SIN_LEN 512
-static const uint8_t sin_table[] PROGMEM =
+static const uint8_t sin_table[] =
 {
     128, 129, 131, 132, 134, 135, 137, 138, 140, 142, 143, 145, 146, 148, 149, 151,
     152, 154, 155, 157, 158, 160, 162, 163, 165, 166, 167, 169, 170, 172, 173, 175,
@@ -25,7 +25,7 @@ static const uint8_t sin_table[] PROGMEM =
 inline static uint8_t sinSample(uint16_t i) {
     uint16_t newI = i % (SIN_LEN/2);
     newI = (newI >= (SIN_LEN/4)) ? (SIN_LEN/2 - newI -1) : newI;
-    uint8_t sine = pgm_read_byte(&sin_table[newI]);
+    uint8_t sine = sin_table[newI];
     return (i >= (SIN_LEN/2)) ? (255 - sine) : sine;
 }
 
@@ -50,7 +50,7 @@ inline static uint8_t sinSample(uint16_t i) {
 #define MARK_FREQ  1200
 #define SPACE_FREQ 2200
 #define PHASE_BITS   8                              // How much to increment phase counter each sample
-#define PHASE_INC    1                              // Nudge by an eigth of a sample each adjustment
+#define PHASE_INC    3                              // Nudge by an eigth of a sample each adjustment
 #define PHASE_MAX    (SAMPLESPERBIT * PHASE_BITS)   // Resolution of our phase counter = 64
 #define PHASE_THRESHOLD  (PHASE_MAX / 2)            // Target transition point of our phase window
 
@@ -120,19 +120,32 @@ typedef struct Afsk
 // to configure the pins as output pins, and the _ON()
 // and _OFF() functions writes to the PORT registers
 // to turn the pins on or off.
-#define LED_TX_INIT() do { LED_DDR |= _BV(1); } while (0)
-#define LED_TX_ON()   do { LED_PORT |= _BV(1); } while (0)
-#define LED_TX_OFF()  do { LED_PORT &= ~_BV(1); } while (0)
+#define LED_TX_INIT() do { /*LED_DDR |= _BV(1);*/ } while (0)
+#define LED_TX_ON()   do { /*LED_PORT |= _BV(1);*/ } while (0)
+#define LED_TX_OFF()  do { /*LED_PORT &= ~_BV(1);*/ } while (0)
 
-#define LED_RX_INIT() do { LED_DDR |= _BV(2); } while (0)
-#define LED_RX_ON()   do { LED_PORT |= _BV(2); } while (0)
-#define LED_RX_OFF()  do { LED_PORT &= ~_BV(2); } while (0)
+#define LED_RX_INIT() do { /*LED_DDR |= _BV(2);*/ } while (0)
+#define LED_RX_ON()   do { /*LED_PORT |= _BV(2);*/ } while (0)
+#define LED_RX_OFF()  do { /*LED_PORT &= ~_BV(2);*/ } while (0)
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void AFSK_init(Afsk *afsk);
 void AFSK_transmit(char *buffer, size_t size);
 void AFSK_poll(Afsk *afsk);
+void AFSK_adc_isr(Afsk *afsk, int8_t currentSample);
 
 void afsk_putchar(char c);
 int afsk_getchar(void);
+
+
+extern Afsk *AFSK_modem;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif
