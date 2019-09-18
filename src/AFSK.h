@@ -9,7 +9,8 @@
 #include "FIFO.h"
 #include "HDLC.h"
 
-#define SIN_LEN 512
+#define TRUE_SIN_LEN 512
+#define SIN_LEN (TRUE_SIN_LEN * OVERSAMPLING)
 static const uint8_t sin_table[] =
 {
     128, 129, 131, 132, 134, 135, 137, 138, 140, 142, 143, 145, 146, 148, 149, 151,
@@ -23,10 +24,11 @@ static const uint8_t sin_table[] =
 };
 
 inline static uint8_t sinSample(uint16_t i) {
-    uint16_t newI = i % (SIN_LEN/2);
-    newI = (newI >= (SIN_LEN/4)) ? (SIN_LEN/2 - newI -1) : newI;
+    i /= OVERSAMPLING;
+    uint16_t newI = i % (TRUE_SIN_LEN/2);
+    newI = (newI >= (TRUE_SIN_LEN/4)) ? (TRUE_SIN_LEN/2 - newI -1) : newI;
     uint8_t sine = sin_table[newI];
-    return (i >= (SIN_LEN/2)) ? (255 - sine) : sine;
+    return (i >= (TRUE_SIN_LEN/2)) ? (255 - sine) : sine;
 }
 
 
@@ -38,14 +40,15 @@ inline static uint8_t sinSample(uint16_t i) {
 
 #define CPU_FREQ F_CPU
 
-#define CONFIG_AFSK_RX_BUFLEN 64
-#define CONFIG_AFSK_TX_BUFLEN 64   
+#define CONFIG_AFSK_RX_BUFLEN 8192
+#define CONFIG_AFSK_TX_BUFLEN 8192
 #define CONFIG_AFSK_RXTIMEOUT 0
 #define CONFIG_AFSK_PREAMBLE_LEN 150UL
 #define CONFIG_AFSK_TRAILER_LEN 50UL
 #define SAMPLERATE 9600
 #define BITRATE    1200
 #define SAMPLESPERBIT (SAMPLERATE / BITRATE)
+#define SAMPLESPERBIT_TX (CONFIG_AFSK_DAC_SAMPLERATE / BITRATE)
 #define BIT_STUFF_LEN 5
 #define MARK_FREQ  1200
 #define SPACE_FREQ 2200
@@ -74,7 +77,7 @@ typedef struct Afsk
     uint16_t tailLength;                    // Length of transmission tail
 
     // Modulation values
-    uint8_t sampleIndex;                    // Current sample index for outgoing bit 
+    uint8_t sampleIndex;                    // Current sample index for outgoing bit
     uint8_t currentOutputByte;              // Current byte to be modulated
     uint8_t txBit;                          // Mask of current modulated bit
     bool bitStuff;                          // Whether bitstuffing is allowed
@@ -137,6 +140,8 @@ void AFSK_init(Afsk *afsk);
 void AFSK_transmit(char *buffer, size_t size);
 void AFSK_poll(Afsk *afsk);
 void AFSK_adc_isr(Afsk *afsk, int8_t currentSample);
+
+void finish_transmission();
 
 void afsk_putchar(char c);
 int afsk_getchar(void);

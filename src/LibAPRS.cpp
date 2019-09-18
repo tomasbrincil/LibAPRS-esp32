@@ -3,7 +3,7 @@
 #include "AX25.h"
 #include "LibAPRS.h"
 
-Afsk modem;
+// Afsk modem;
 AX25Ctx AX25;
 extern "C" void aprs_msg_callback(struct AX25Msg *msg);
 #define countof(a) sizeof(a)/sizeof(a[0])
@@ -56,7 +56,8 @@ void APRS_init(int reference, bool open_squelch) {
     LibAPRS_vref = reference;
     LibAPRS_open_squelch = open_squelch;
 
-    AFSK_init(&modem);
+    Afsk *modem = (Afsk *)malloc(sizeof(Afsk));
+    AFSK_init(modem);
     ax25_init(&AX25, aprs_msg_callback);
 }
 

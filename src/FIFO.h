@@ -22,7 +22,7 @@ inline bool fifo_isfull(const FIFOBuffer *f) {
 
 inline void fifo_push(FIFOBuffer *f, unsigned char c) {
   *(f->tail) = c;
-  
+
   if (f->tail == f->end) {
     f->tail = f->begin;
   } else {

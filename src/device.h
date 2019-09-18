@@ -16,9 +16,6 @@
     #define FREQUENCY_CORRECTION 0
 #endif
 
-// Sampling & timer setup
-#define CONFIG_AFSK_DAC_SAMPLERATE 9600
-
 // Port settings
 #if TARGET_CPU == m328p
     #define DAC_PORT PORTD
@@ -30,3 +27,27 @@
 #endif
 
 #endif
+
+
+//i2s number
+#define TNC_I2S_NUM           (0)
+#define DESIRED_SAMPLE_RATE   (13200)
+#define OVERSAMPLING          (8)
+//i2s sample rate
+#define TNC_I2S_SAMPLE_RATE   (DESIRED_SAMPLE_RATE * OVERSAMPLING)
+#define CONFIG_AFSK_DAC_SAMPLERATE (TNC_I2S_SAMPLE_RATE)
+
+//i2s data bits
+#define TNC_I2S_SAMPLE_BITS   (16)
+// 125ms of audio should be plenty I think
+#define TNC_I2S_BUFLEN        (TNC_I2S_SAMPLE_RATE / 8)
+
+//I2S data format
+#define TNC_I2S_FORMAT        (I2S_CHANNEL_FMT_ONLY_RIGHT)
+#define TNC_I2S_CHANNEL_NUM   (1)
+
+//I2S built-in ADC unit
+#define I2S_ADC_UNIT              ADC_UNIT_1
+#define I2S_ADC_CHANNEL           ADC1_CHANNEL_0
+
+#define KEEP_RECORDING_THRESH  (5)
