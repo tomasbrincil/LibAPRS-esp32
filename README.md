@@ -1,3 +1,18 @@
+LibAPRS-esp32-i2s
+==========
+
+This is a fork of [LibAPRS](https://github.com/markqvist/LibAPRS) designed to run on the ESP32.
+
+The ESP32's `adc1_get_raw()` / `adc2_get_raw()` methods [can only be called at about 6000Hz](https://esp32.com/viewtopic.php?t=1075); LibAPRS wants 9600Hz.
+To get around this limitation, this fork uses the ESP32's [I2S peripheral](https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/i2s.html) to drive both the ADC and the DAC.
+
+Differences
+-----------
+
+The API remains roughly the same.
+However, if you aren't using `AFSK_transmit` or `ax25_sendVia` to send packets, you need to call `finish_transmission` to actually send data to the ADC over I2S.
+
+
 LibAPRS
 ==========
 
