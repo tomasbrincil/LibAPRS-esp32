@@ -305,7 +305,7 @@ void APRS_sendMsg(void *_buffer, size_t length) {
     packet[12+length] = h+48;
     packet[13+length] = d+48;
     packet[14+length] = n+48;
-    
+
     APRS_sendPkt(packet, payloadLength);
     free(packet);
 }

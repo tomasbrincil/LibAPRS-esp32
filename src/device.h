@@ -29,8 +29,14 @@
 #endif
 
 
+#define GPIO_AUDIO_TRIGGER GPIO_NUM_37
+// #define GPIO_AUDIO_IN 36
+#define GPIO_AUDIO_OUT GPIO_NUM_25
+#define ESP_INTR_FLAG_DEFAULT 0
+
+
 //i2s number
-#define TNC_I2S_NUM           (0)
+#define TNC_I2S_NUM           I2S_NUM_0
 #define DESIRED_SAMPLE_RATE   (13200)
 #define OVERSAMPLING          (8)
 //i2s sample rate
@@ -38,7 +44,7 @@
 #define CONFIG_AFSK_DAC_SAMPLERATE (TNC_I2S_SAMPLE_RATE)
 
 //i2s data bits
-#define TNC_I2S_SAMPLE_BITS   (16)
+#define TNC_I2S_SAMPLE_BITS   (I2S_BITS_PER_SAMPLE_16BIT)
 // 125ms of audio should be plenty I think
 #define TNC_I2S_BUFLEN        (TNC_I2S_SAMPLE_RATE / 8)
 
