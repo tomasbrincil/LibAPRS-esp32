@@ -48,16 +48,17 @@ static void IRAM_ATTR gpio_isr_handler(void* arg)
 }
 
 void AFSK_hw_init(void) {
+    // Configure audio input trigger pin
     gpio_config_t io_conf;
-    //interrupt of rising edge
     io_conf.intr_type = GPIO_INTR_POSEDGE;
-    //bit mask of the pins, use GPIO4/5 here
     io_conf.pin_bit_mask = (1ULL<<GPIO_AUDIO_TRIGGER);
-    //set as input mode
     io_conf.mode = GPIO_MODE_INPUT;
-    //enable pull-up mode
     io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
     gpio_config(&io_conf);
+
+    // Configure PTT output
+    gpio_set_direction(GPIO_PTT_OUT, GPIO_MODE_OUTPUT);
+    gpio_set_level(GPIO_PTT_OUT, 1);
 
     //create a queue to handle gpio event from isr
     gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
@@ -136,6 +137,7 @@ uint8_t AFSK_dac_isr(Afsk *afsk);
 bool flip = false;
 void transmit_audio_i2s(Afsk *afsk) {
     // printf("transmit_audio_i2s\n");
+    gpio_set_level(GPIO_PTT_OUT, 0);
     int i=0;
     for (i=0; afsk->sending && i < TX_SAMPLE_BUFLEN; i++) {
         uint8_t sample = AFSK_dac_isr(afsk);
@@ -214,7 +216,7 @@ void finish_transmission() {
         ));
     }
     printf("custom_preamble: %ld, custom_tail: %ld\n", custom_preamble, custom_tail);
-
+    gpio_set_level(GPIO_PTT_OUT, 1);
     // ESP_ERROR_CHECK(i2s_zero_dma_buffer(I2S_NUM_0));
 }
 
