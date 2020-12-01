@@ -1,11 +1,11 @@
-#include "FakeArduino.h"
+#include "Arduino.h"
 #include "AFSK.h"
 #include "AX25.h"
 #include "LibAPRS.h"
 
 // Afsk modem;
 AX25Ctx AX25;
-extern "C" void aprs_msg_callback(struct AX25Msg *msg);
+extern void aprs_msg_callback(struct AX25Msg *msg);
 #define countof(a) sizeof(a)/sizeof(a[0])
 
 int LibAPRS_vref = REF_3V3;
@@ -315,6 +315,7 @@ void APRS_msgRetry() {
     APRS_sendMsg(lastMessage, lastMessageLen);
 }
 
+/*
 // For getting free memory, from:
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1213583720/15
 
@@ -332,7 +333,7 @@ int freeListSize() {
   struct __freelist* current;
   int total = 0;
   for (current = __flp; current; current = current->nx) {
-    total += 2; /* Add two bytes for the memory block's header  */
+    total += 2; // Add two bytes for the memory block's header
     total += (int) current->sz;
   }
   return total;
@@ -348,3 +349,5 @@ int freeMemory() {
   }
   return free_memory;
 }
+
+*/

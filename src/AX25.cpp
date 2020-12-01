@@ -1,6 +1,6 @@
 // Based on work by Francesco Sacchi
-
-#include "FakeArduino.h"
+#include <stdint.h>
+#include "Arduino.h"
 #include <string.h>
 #include <ctype.h>
 #include "AX25.h"
