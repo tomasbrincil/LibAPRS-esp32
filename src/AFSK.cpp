@@ -126,7 +126,7 @@ static void AFSK_txStart(Afsk *afsk) {
       afsk->tailLength = DIV_ROUND(custom_tail * BITRATE, 8000);
     }
 
-    printf("AFSK_txStart\n");
+    //printf("AFSK_txStart\n");
 }
 
 #define TX_SAMPLE_BUFLEN (8 * CONFIG_AFSK_DAC_SAMPLERATE / BITRATE)

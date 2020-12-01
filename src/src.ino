@@ -114,7 +114,7 @@ void locationUpdateExample() {
   APRS_setDirectivity(0);
   
   // We'll define a comment string
-  char *comment = "LibAPRS location update";
+  char *comment = "LibAPRS esp32!";
     
   // And send the update
   APRS_sendLoc(comment, strlen(comment));
@@ -123,7 +123,7 @@ void locationUpdateExample() {
 
 void messageExample() {
   // We first need to set the message recipient
-  APRS_setMessageDestination("AA3BBB", 0);
+  APRS_setMessageDestination("OK1BT", 0);
   
   // And define a string to send
   char *message = "Hi there! This is a message.";
@@ -170,8 +170,10 @@ void loop() {
   delay(1000);
   if (whichExample) {
     locationUpdateExample();
+    Serial.print("Location updated");
   } else {
     messageExample();
+    Serial.print("Message sent");
   }
   whichExample ^= true;
 
