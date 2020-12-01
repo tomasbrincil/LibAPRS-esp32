@@ -1,6 +1,6 @@
 LibAPRS esp32
 ==========
-Thanks for @EvanKrall work but it was not usable for Arduino IDE while Evan use ESP-IDF. Dot import .zip through Arduino IDE, just download repo and open src.ino.
+Thanks for @EvanKrall work but it was not usable for Arduino IDE while Evan use ESP-IDF. Do not import .zip through Arduino IDE, just download repo and open src.ino.
 This is first kickout. I dont even know if it works but on the scope there is someting on pin 26.
 
 LibAPRS-esp32-i2s
